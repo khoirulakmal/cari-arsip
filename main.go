@@ -1,25 +1,43 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
+	"log"
 	"net/http"
+	"os"
 )
 
+type application struct {
+	errorLog      *log.Logger
+	infoLog       *log.Logger
+	templateCache map[string]*template.Template
+}
+
 func main() {
-	tmpl, err := template.ParseFiles("./index.html")
+
+	errorLog := log.New(os.Stdout, "ERROR ", log.Ldate|log.Ltime|log.Lshortfile)
+	infoLog := log.New(os.Stdout, "INFO ", log.Ldate|log.Ltime|log.Lshortfile)
+
+	// Parse template cache
+	tmpl, err := parseTemplate()
 	if err != nil {
-		fmt.Printf("Error ! %s", err.Error())
-		return
+		errorLog.Printf(err.Error())
+	} else {
+		infoLog.Printf("Parsing template success!")
 	}
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/" {
-			fmt.Fprintln(w, "404 Not Found!")
-		} else {
-			tmpl.Execute(w, nil)
-		}
-	})
-	fs := http.FileServer(http.Dir("assets/"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
-	http.ListenAndServe(":8000", nil)
+
+	app := &application{
+		errorLog:      errorLog,
+		infoLog:       infoLog,
+		templateCache: tmpl,
+	}
+
+	srvr := &http.Server{
+		Addr:    ":8000",
+		Handler: app.routes(),
+	}
+	err = srvr.ListenAndServe()
+	if err != nil {
+		errorLog.Printf(err.Error())
+	}
 }
