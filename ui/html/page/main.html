@@ -1,0 +1,18 @@
+{{define "main"}}
+
+<main class="hero min-h-screen" id="main">
+    <section class="hero-content text-center flex flex-col">
+        <h1 class="text-5xl italic font-headline">Butuh arsip tentang apa?</h1>
+        <div class="space-x-2 py-10" id="search">
+            <input class="input max-w-xs" type="text" name="cari-artikel" id="cari-artikel" placeholder="......">
+            <button class="btn btn-neutral" type="submit"
+            hx-get="/cari"
+            hx-trigger="click"
+            hx-target="#hasil"
+            hx-swap="innerHTML"> Cari </button>
+        </div>
+        <div id="hasil"></div>
+        </section>
+</main>
+
+{{end}}

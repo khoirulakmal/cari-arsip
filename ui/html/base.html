@@ -1,0 +1,23 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html lang="en" class="bg-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./static/styles.css" rel="stylesheet">
+    <title>Cari Arsip</title>
+</head>
+    <body>
+        <header>
+            {{template "nav" .}}
+        </header>
+        <main>
+            {{template "main" .}}
+        </main>
+        <footer class="footer footer-center text-base-content p-4">
+            Use it wisely!
+        </footer>
+        <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+    </body>
+</html>
+{{end}}
